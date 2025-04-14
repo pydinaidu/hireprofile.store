@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #1a73e8;
+            --secondary-color: #f1f3f4;
+            --accent-color: #fbbc04;
+            --text-color: #202124;
+            --light-text: #5f6368;
+            --border-color: #dadce0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        /* Main Builder Styles */
+        .builder-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .form-section {
+            flex: 1;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .preview-section {
+            flex: 1;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group h2 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-field {
+            flex: 1;
+            margin-bottom: 15px;
+        }
+        
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .form-field label.required:after {
+            content: " *";
+            color: #d93025;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26,115,232,0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Skills Input */
+        .skills-container {
+            margin-bottom: 20px;
+        }
+        
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .skill-tag {
+            background-color: var(--secondary-color);
+            padding: 6px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+        }
+        
+        .skill-tag .remove-skill {
+            margin-left: 8px;
+            cursor: pointer;
+            color: var(--light-text);
+        }
+        
+        .skills-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #skillsInput {
+            flex: 1;
+        }
+        
+        .add-skill-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+        
+        /* Experience/Education Sections */
+        .entry {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .remove-btn {
+            color: #d93025;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0d5bba;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        /* Preview Styles */
+        .resume-preview {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .resume-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .resume-header h1 {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .resume-header h2 {
+            font-size: 18px;
+            color: var(--light-text);
+            font-weight: normal;
+        }
+        
+        .resume-body {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .left-column {
+            flex: 1;
+            max-width: 250px;
+        }
+        
+        .right-column {
+            flex: 2;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section h3 {
+            color: var(--primary-color);
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .contact-info p {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            width: 16px;
+            text-align: center;
+        }
+        
+        .skills-list {
+            list-style: none;
+        }
+        
+        .skills-list li {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .experience-item, .education-item {
+            margin-bottom: 20px;
+        }
+        
+        .experience-item h4, .education-item h4 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .company, .institution {
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+        
+        .date-location {
+            color: var(--light-text);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        
+        .description {
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .builder-container {
+                flex-direction: column;
+            }
+            
+            .resume-body {
+                flex-direction: column;
+            }
+            
+            .left-column {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Resume<span>Builder</span></div>
+            <div>
+                <button class="btn btn-primary" onclick="downloadResume()">
+                    <i class="fas fa-download"></i> Download Resume
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="builder-container">
+            <div class="form-section">
+                <form id="resumeForm">
+                    <!-- Personal Information -->
+                    <div class="form-group">
+                        <h2>Personal Information</h2>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="firstName" class="required">First Name</label>
+                                <input type="text" id="firstName" placeholder="Enter your first name" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="lastName" class="required">Last Name</label>
+                                <input type="text" id="lastName" placeholder="Enter your last name" required>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="profession">Profession</label>
+                            <input type="text" id="profession" placeholder="e.g. Software Developer">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" placeholder="your.email@example.com">
+                            </div>
+                            <div class="form-field">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" placeholder="+91 9876543210">
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" placeholder="City, State, Country">
+                        </div>
+                        <div class="form-field">
+                            <label for="summary">Professional Summary</label>
+                            <textarea id="summary" placeholder="Briefly describe your professional background and skills"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills -->
+                    <div class="form-group">
+                        <h2>Skills</h2>
+                        <div class="skills-container">
+                            <div class="skills-tags" id="skillsTags"></div>
+                            <div class="skills-input-wrapper">
+                                <input type="text" id="skillsInput" placeholder="Add skills (e.g. JavaScript, React)">
+                                <button type="button" class="add-skill-btn" id="addSkillBtn">Add</button>
+                            </div>
+                        </div>
+                        <input type="hidden" id="skillsData">
+                    </div>
+                    
+                    <!-- Work Experience -->
+                    <div class="form-group">
+                        <h2>Work Experience</h2>
+                        <div id="experienceFields">
+                            <div class="entry">
+                                <div class="entry-header">
+                                    <h3>Experience #1</h3>
+                                    <button type="button" class="remove-btn" onclick="removeExperience(this)">Remove</button>
+                                </div>
+                                <div class="form-field">
+                                    <label for="exp-title-1" class="required">Job Title</label>
+                                    <input type="text" id="exp-title-1" class="exp-title" placeholder="e.g. Senior Developer" required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="exp-company-1" class="required">Company</label>
+                                    <input type="text" id="exp-company-1" class="exp-company" placeholder="Company name" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="exp-start-1">Start Date</label>
+                                        <input type="text" id="exp-start-1" class="exp-start" placeholder="MM/YYYY">
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="exp-end-1">End Date</label>
+                                        <input type="text" id="exp-end-1" class="exp-end" placeholder="MM/YYYY or Present">
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label for="exp-description-1">Job Description</label>
+                                    <textarea id="exp-description-1" class="exp-description" placeholder="Describe your responsibilities and achievements"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addExperience()">
+                            <i class="fas fa-plus"></i> Add Experience
+                        </button>
+                    </div>
+                    
+                    <!-- Education -->
+                    <div class="form-group">
+                        <h2>Education</h2>
+                        <div id="educationFields">
+                            <div class="entry">
+                                <div class="entry-header">
+                                    <h3>Education #1</h3>
+                                    <button type="button" class="remove-btn" onclick="removeEducation(this)">Remove</button>
+                                </div>
+                                <div class="form-field">
+                                    <label for="edu-degree-1" class="required">Degree</label>
+                                    <input type="text" id="edu-degree-1" class="edu-degree" placeholder="e.g. Bachelor of Technology" required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="edu-institution-1" class="required">Institution</label>
+                                    <input type="text" id="edu-institution-1" class="edu-institution" placeholder="University name" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-field">
+                                        <label for="edu-start-1">Start Date</label>
+                                        <input type="text" id="edu-start-1" class="edu-start" placeholder="MM/YYYY">
+                                    </div>
+                                    <div class="form-field">
+                                        <label for="edu-end-1">End Date</label>
+                                        <input type="text" id="edu-end-1" class="edu-end" placeholder="MM/YYYY">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="addEducation()">
+                            <i class="fas fa-plus"></i> Add Education
+                        </button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="generateResume()">
+                            <i class="fas fa-sync-alt"></i> Update Preview
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-trash-alt"></i> Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="preview-section">
+                <div class="resume-preview" id="resumePreview">
+                    <div class="resume-header">
+                        <h1 id="previewName">Your Name</h1>
+                        <h2 id="previewProfession">Profession</h2>
+                    </div>
+                    
+                    <div class="resume-body">
+                        <div class="left-column">
+                            <div class="section contact-info">
+                                <h3>Contact</h3>
+                                <p id="previewEmail"><i class="fas fa-envelope"></i> email@example.com</p>
+                                <p id="previewPhone"><i class="fas fa-phone"></i> +91 9876543210</p>
+                                <p id="previewAddress"><i class="fas fa-map-marker-alt"></i> City, State, Country</p>
+                            </div>
+                            
+                            <div class="section">
+                                <h3>Skills</h3>
+                                <ul class="skills-list" id="previewSkills">
+                                    <li>JavaScript</li>
+                                    <li>React</li>
+                                    <li>Node.js</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="right-column">
+                            <div class="section">
+                                <h3>Summary</h3>
+                                <p id="previewSummary">Professional summary goes here. Highlight your key skills and experiences.</p>
+                            </div>
+                            
+                            <div class="section">
+                                <h3>Work Experience</h3>
+                                <div id="previewExperience">
+                                    <div class="experience-item">
+                                        <h4>Job Title</h4>
+                                        <p class="company">Company Name</p>
+                                        <p class="date-location">MM/YYYY - MM/YYYY</p>
+                                        <p class="description">Job description and key achievements.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="section">
+                                <h3>Education</h3>
+                                <div id="previewEducation">
+                                    <div class="education-item">
+                                        <h4>Degree</h4>
+                                        <p class="institution">University Name</p>
+                                        <p class="date-location">MM/YYYY - MM/YYYY</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        // Common skills for autocomplete
+        const commonSkills = [
+            "JavaScript", "React", "Angular", "Vue.js", "Node.js", 
+            "Python", "Django", "Flask", "Java", "Spring Boot",
+            "HTML5", "CSS3", "SASS", "Bootstrap", "jQuery",
+            "PHP", "Laravel", "WordPress", "MySQL", "MongoDB",
+            "Git", "Docker", "AWS", "Azure", "REST API",
+            "GraphQL", "TypeScript", "Redux", "Express.js", "Next.js"
+        ];
+
+        // Skills management
+        let skills = ["JavaScript", "React", "Node.js"]; // Default skills
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initSkillsInput();
+            generateResume();
+        });
+
+        // Initialize skills input
+        function initSkillsInput() {
+            const skillsInput = document.getElementById('skillsInput');
+            const skillsTags = document.getElementById('skillsTags');
+            const addSkillBtn = document.getElementById('addSkillBtn');
+            const skillsData = document.getElementById('skillsData');
+
+            // Add skill function
+            function addSkill(skillName) {
+                if (!skillName.trim()) return;
+                
+                const normalizedSkill = skillName.trim().toLowerCase();
+                if (skills.some(s => s.toLowerCase() === normalizedSkill)) return;
+                
+                skills.push(skillName.trim());
+                updateSkillsDisplay();
+                skillsInput.value = '';
+            }
+
+            // Update skills display
+            function updateSkillsDisplay() {
+                skillsTags.innerHTML = '';
+                skills.forEach((skill, index) => {
+                    const tag = document.createElement('div');
+                    tag.className = 'skill-tag';
+                    tag.innerHTML = `
+                        ${skill}
+                        <span class="remove-skill" data-index="${index}">&times;</span>
+                    `;
+                    skillsTags.appendChild(tag);
+                });
+                
+                // Update hidden field with skills data
+                skillsData.value = JSON.stringify(skills);
+                
+                // Update resume preview
+                updateSkillsPreview();
+            }
+
+            // Remove skill
+            function removeSkill(index) {
+                skills.splice(index, 1);
+                updateSkillsDisplay();
+            }
+
+            // Update resume preview skills
+            function updateSkillsPreview() {
+                const previewSkills = document.getElementById('previewSkills');
+                previewSkills.innerHTML = '';
+                
+                skills.forEach(skill => {
+                    const li = document.createElement('li');
+                    li.textContent = skill;
+                    previewSkills.appendChild(li);
+                });
+            }
+
+            // Event listeners
+            skillsInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addSkill(skillsInput.value);
+                }
+            });
+
+            addSkillBtn.addEventListener('click', () => {
+                addSkill(skillsInput.value);
+            });
+
+            skillsTags.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-skill')) {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    removeSkill(index);
+                }
+            });
+
+            // Initial display of skills
+            updateSkillsDisplay();
+        }
+
+        // Add experience entry
+        function addExperience() {
+            const experienceFields = document.getElementById('experienceFields');
+            const count = experienceFields.children.length + 1;
+            
+            const newExperience = document.createElement('div');
+            newExperience.className = 'entry';
+            newExperience.innerHTML = `
+                <div class="entry-header">
+                    <h3>Experience #${count}</h3>
+                    <button type="button" class="remove-btn" onclick="removeExperience(this)">Remove</button>
+                </div>
+                <div class="form-field">
+                    <label for="exp-title-${count}" class="required">Job Title</label>
+                    <input type="text" id="exp-title-${count}" class="exp-title" placeholder="e.g. Senior Developer" required>
+                </div>
+                <div class="form-field">
+                    <label for="exp-company-${count}" class="required">Company</label>
+                    <input type="text" id="exp-company-${count}" class="exp-company" placeholder="Company name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="exp-start-${count}">Start Date</label>
+                        <input type="text" id="exp-start-${count}" class="exp-start" placeholder="MM/YYYY">
+                    </div>
+                    <div class="form-field">
+                        <label for="exp-end-${count}">End Date</label>
+                        <input type="text" id="exp-end-${count}" class="exp-end" placeholder="MM/YYYY or Present">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="exp-description-${count}">Job Description</label>
+                    <textarea id="exp-description-${count}" class="exp-description" placeholder="Describe your responsibilities and achievements"></textarea>
+                </div>
+            `;
+            
+            experienceFields.appendChild(newExperience);
+        }
+
+        // Remove experience entry
+        function removeExperience(button) {
+            const experienceEntry = button.closest('.entry');
+            if (document.querySelectorAll('#experienceFields .entry').length > 1) {
+                experienceEntry.remove();
+            } else {
+                alert("You need at least one work experience entry.");
+            }
+        }
+
+        // Add education entry
+        function addEducation() {
+            const educationFields = document.getElementById('educationFields');
+            const count = educationFields.children.length + 1;
+            
+            const newEducation = document.createElement('div');
+            newEducation.className = 'entry';
+            newEducation.innerHTML = `
+                <div class="entry-header">
+                    <h3>Education #${count}</h3>
+                    <button type="button" class="remove-btn" onclick="removeEducation(this)">Remove</button>
+                </div>
+                <div class="form-field">
+                    <label for="edu-degree-${count}" class="required">Degree</label>
+                    <input type="text" id="edu-degree-${count}" class="edu-degree" placeholder="e.g. Bachelor of Technology" required>
+                </div>
+                <div class="form-field">
+                    <label for="edu-institution-${count}" class="required">Institution</label>
+                    <input type="text" id="edu-institution-${count}" class="edu-institution" placeholder="University name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="edu-start-${count}">Start Date</label>
+                        <input type="text" id="edu-start-${count}" class="edu-start" placeholder="MM/YYYY">
+                    </div>
+                    <div class="form-field">
+                        <label for="edu-end-${count}">End Date</label>
+                        <input type="text" id="edu-end-${count}" class="edu-end" placeholder="MM/YYYY">
+                    </div>
+                </div>
+            `;
+            
+            educationFields.appendChild(newEducation);
+        }
+
+        // Remove education entry
+        function removeEducation(button) {
+            const educationEntry = button.closest('.entry');
+            if (document.querySelectorAll('#educationFields .entry').length > 1) {
+                educationEntry.remove();
+            } else {
+                alert("You need at least one education entry.");
+            }
+        }
+
+        // Generate resume preview
+        function generateResume() {
+            // Personal Information
+            const firstName = document.getElementById('firstName').value || 'Your';
+            const lastName = document.getElementById('lastName').value || 'Name';
+            document.getElementById('previewName').textContent = `${firstName} ${lastName}`;
+            
+            const profession = document.getElementById('profession').value || 'Profession';
+            document.getElementById('previewProfession').textContent = profession;
+            
+            document.getElementById('previewEmail').innerHTML = `<i class="fas fa-envelope"></i> ${document.getElementById('email').value || 'email@example.com'}`;
+            document.getElementById('previewPhone').innerHTML = `<i class="fas fa-phone"></i> ${document.getElementById('phone').value || '+91 9876543210'}`;
+            document.getElementById('previewAddress').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${document.getElementById('address').value || 'City, State, Country'}`;
+            
+            const summary = document.getElementById('summary').value || 'Professional summary goes here. Highlight your key skills and experiences.';
+            document.getElementById('previewSummary').textContent = summary;
+            
+            // Work Experience
+            const experienceContainer = document.getElementById('previewExperience');
+            experienceContainer.innerHTML = '';
+            
+            const experienceEntries = document.querySelectorAll('#experienceFields .entry');
+            experienceEntries.forEach((entry, index) => {
+                const title = entry.querySelector('.exp-title').value || 'Job Title';
+                const company = entry.querySelector('.exp-company').value || 'Company Name';
+                const start = entry.querySelector('.exp-start').value || 'MM/YYYY';
+                const end = entry.querySelector('.exp-end').value || 'MM/YYYY';
+                const description = entry.querySelector('.exp-description').value || 'Job description and key achievements.';
+                
+                const experienceItem = document.createElement('div');
+                experienceItem.className = 'experience-item';
+                experienceItem.innerHTML = `
+                    <h4>${title}</h4>
+                    <p class="company">${company}</p>
+                    <p class="date-location">${start} - ${end}</p>
+                    <p class="description">${description}</p>
+                `;
+                experienceContainer.appendChild(experienceItem);
+            });
+            
+            // Education
+            const educationContainer = document.getElementById('previewEducation');
+            educationContainer.innerHTML = '';
+            
+            const educationEntries = document.querySelectorAll('#educationFields .entry');
+            educationEntries.forEach(entry => {
+                const degree = entry.querySelector('.edu-degree').value || 'Degree';
+                const institution = entry.querySelector('.edu-institution').value || 'University Name';
+                const start = entry.querySelector('.edu-start').value || 'MM/YYYY';
+                const end = entry.querySelector('.edu-end').value || 'MM/YYYY';
+                
+                const educationItem = document.createElement('div');
+                educationItem.className = 'education-item';
+                educationItem.innerHTML = `
+                    <h4>${degree}</h4>
+                    <p class="institution">${institution}</p>
+                    <p class="date-location">${start} - ${end}</p>
+                `;
+                educationContainer.appendChild(educationItem);
+            });
+            
+            // Skills are already updated in real-time via updateSkillsPreview()
+        }
+
+        // Download as PDF
+        function downloadResume() {
+            generateResume();
+            const resumeElement = document.getElementById('resumePreview');
+            
+            // Options for PDF generation
+            const opt = {
+                margin: 10,
+                filename: 'resume.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate PDF
+            html2pdf().from(resumeElement).set(opt).save();
+        }
+    </script>
+</body>
+</html>
